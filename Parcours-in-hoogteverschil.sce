@@ -1,3 +1,6 @@
+// Via dit programma kan een route in hoogteverschillen worden uitgezet, zo nauwkeurig als gewenst.
+// Per deel van de route met dezelfde hellingsgraad wordt dan het nodige klimvermogen berekend en opgeteld bij het totale klimvermogen
+
 beginhoogte = input("Beginhoogte")
 i = 1
 parcours = zeros(1,Afstand)
