@@ -1,3 +1,7 @@
+// Dit programma zet in een grafiek uit het nodige gewicht van batterijpakket in functie van de gewenste snelheid.
+// Dit is enkel van nut om in het begin een batterijpakket te dimensioneren
+// Eens we een batterijpakket hebben gekozen, is dit programma niet meer van toepassing
+
 wensSnelheid = input ("Gewenste snelheid? (km/u)")
 vWens = wensSnelheid/3.6
 
