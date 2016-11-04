@@ -16,7 +16,7 @@ waardeVom = (Pelek - Ngen*Pfietser-Nmotor*Ppaneel)/(Nmotor*capKg*3.6/Afstand-Cro
 
 vStart = 1
 vStop = 25
-vStap = 20e-3
+vStap = 0.1
 v = vStart:vStap:vStop
 
 vlengte = length(v)
