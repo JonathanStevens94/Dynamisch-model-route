@@ -30,5 +30,11 @@ while (i<Afstand)
     Pklim = sin(hellingRad)*Mtot*g*vWens
     PklimTot = PklimTot + Pklim
 end
-//plot(parcours)
+scf(1);
+clf(1);
+subplot(2,1,1)
+plot(parcours)
+xtitle("Parcours in hoogte","Afstand (km)","Hoogte (m)")
+subplot(2,1,2)
 plot(idealeSnelheden)
+xtitle("Ideale snelheid op elk moment","Afstand (km)","Snelheid (km/h)")
