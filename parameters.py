@@ -29,6 +29,7 @@ Nmotor =  0.1 	    #Aan te vullen
 Ngen =  0.1 	    #Aan te vullen
 Afstand =  0.1 	    #Aan te vullen
 wensSnelheid = 0.1  #Aan te vullen
+Whbat = 0.1         #Aan te vullen
 #--------------------------------------
 
 
