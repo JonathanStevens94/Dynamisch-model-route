@@ -9,3 +9,5 @@ Vragen:
 2) Kan er een flowchart van de berekening worden gemaakt?
 
 3) Hebben jullie al schriftelijke neerslag over hoe het model werd opgesteld?
+
+4) ik maakte iets voor hoogteprofielen te plotten, data moet duidelijk nog wat 'behandeld' worden.
