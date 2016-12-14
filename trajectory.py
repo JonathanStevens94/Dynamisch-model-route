@@ -61,7 +61,37 @@ class traject(object):
                 #self.distances.append(1e-9) #if we would end up somehow by having twice the same point (can't devide by zero)
             start = x
             i = i + 1
-        return [self.distances, self.heights]
+        self.pretty_printing_lat_long()
+        return 0
+
+    
+    def get_startPosition(self):
+        if (len(self.latitudes) == 0):
+            print("No trajectory loaded") 
+            return -1
+        return [self.latitudes[0], self.longitudes[0]]
+
+
+    def get_slopes_traject(self, deltax = None, avg_slope_distance = None):
+        '''Input is a datadict gotten from importGPSData, it contains the heights and distances of a trajectory. Returns a list with the slopes for the trajectory'''
+        if deltax == None: deltax = self.deltax
+        if avg_slope_distance == None: avg_slope_distance = self.avg_slope_distance
+        #we need difference in height for two points since we want the slope between these points
+        height_diff = np.array([(self.heights[x] - self.heights[x-1]) for x in range(1, len(self.heights))]) 
+        slopes = [y/x*100 for y,x in zip(height_diff, self.distances)] #calculate slope in percentages
+        #print(max(slopes), min(slopes)) #check maxima
+        cum_distances = np.cumsum(self.distances)
+        slope_index = cum_distances*1.0/deltax #slope index for advancing slope_avg_distance
+        slope_index = np.insert(slope_index, 0, 0)
+        x = cum_distances
+        y = np.cumsum(height_diff)
+        #determining smoothing factor according to the docs: (m - sqrt(2*m)) * std**2 <= s <= (m + sqrt(2*m)) * std**2 but this gives an horrible over smoothing so I am choosing my own
+        tck = interpolate.splrep(x, y, s=10) #used to be 40 for the profile with loads of data
+        xnew = np.arange(0, cum_distances[-1], deltax)
+        self.heights_c = interpolate.splev(xnew, tck, der=0)
+        self.slopes =  interpolate.splev(xnew, tck, der=1)
+        self.avg_slopes = [self.slopes[slope_index[x]:slope_index[x+1]].mean() for x in range(len(slope_index)-1)]
+        return self.avg_slopes    
 
 
     def get_slopes(self, deltax = None, avg_slope_distance = None):
@@ -85,7 +115,7 @@ class traject(object):
         return self.avg_slopes    
 
 
-    def calculate_compass_bearing(self):
+    def get_compass_bearing(self):
         """
         Calculates the bearing between two points.
         The formulae used is the following:
@@ -129,8 +159,20 @@ class traject(object):
             print(fmt % (i, lat, long, height))
         return 0
         
+    def simple_slope_plot(self):
+        cum_distances = np.cumsum(self.distances)
+        cum_distances = np.insert(cum_distances, 0, 0)
+        xnew = np.arange(0, np.cumsum(self.distances)[-1], self.deltax)
+        fig, ax1 = plt.subplots()
+        ax1.plot(xnew, self.heights_c + self.heights[0], color='black')
+        ax1.plot(np.cumsum(self.distances), self.heights[1:], 'x')
+        ax2 = ax1.twinx()
+        ax2.plot(xnew, self.slopes, color='red')
+        ax2.bar(cum_distances[:-1], self.avg_slopes, color='green', width=np.array(self.distances), alpha=0.3)
+        plt.show()
 
-    def simple_slope_plot(self, avg_slope_distance = None):
+
+    def integrated_slope_plot(self, avg_slope_distance = None):
         if avg_slope_distance == None: avg_slope_distance = self.avg_slope_distance
         slope_index = int(avg_slope_distance*1.0/self.deltax) 
         xnew = np.arange(0, np.cumsum(self.distances)[-1], self.deltax)
